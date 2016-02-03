@@ -4,6 +4,7 @@
 Entry point for the OpenProvider API.
 """
 
+import pprint
 import lxml
 import lxml.objectify
 import lxml.etree
@@ -78,6 +79,7 @@ class OpenProvider(object):
             method='c14n'
         )
 
+        pprint.pprint(apirequest)
         try:
             apiresponse = self.session.post(self.url, data=apirequest)
             apiresponse.raise_for_status()

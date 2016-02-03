@@ -189,6 +189,7 @@ class DomainDetails(Model):
         return str(self.domain)
 
 
+
 class Nameserver(Model):
     """
     A nameserver with either an IPv4 or an IPv6 address.
@@ -203,6 +204,7 @@ class Nameserver(Model):
 
     def __str__(self):
         return str(self.name)
+
 
 
 class Record(Model):
@@ -222,8 +224,9 @@ class Record(Model):
     ttl (required)
         The Time To Live of the record; this is a value in seconds
     """
-    pass
 
+    def __str__(self):
+        return str(self.name)
 
 class History(Model):
     """
@@ -238,6 +241,31 @@ class History(Model):
     """
     pass
 
+class ZoneDetails(Model):
+    """
+    A Zone Object
+
+    type (required)
+    name (required)
+    ip (required if no valid ip6)
+    creationDate
+    modificationDate
+    records (submodel)
+    history (submodel)
+    """
+
+    _records = submodel(Record, "records")
+    history = submodel(History, "history")
+
+    @property
+    def records(self):
+        try:
+            return [Record(i) for i in self._records.array[0].item]
+        except AttributeError:
+            return []
+
+    def __str__(self):
+        return str(self.name)
 
 class Address(Model):
     """
